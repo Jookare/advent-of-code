@@ -7,28 +7,29 @@ def rotations(inputs, start_point=50):
     point = start_point
     counter = 0
     for move in inputs:
+        side = move[0]
         rot = int(move[1:])
-        sp = point
-        if move[0] == "L":
-            point = point - rot
-            print("start", sp)
-            if sp < rot and sp != 0:
-                counter += abs(point // 100)
+        
+        if side == "L":
+            end_raw = point - rot
+            if point == 0:
+                counter += rot // 100
+            else:
+                counter += (100 - end_raw) // 100
         else:
-            point = point + rot
-            if point > 100:
-                counter += abs(point // 100)
-        
-        if point % 100 == 0:
-            counter += 1
-            print("zero point")
-        
-        point = point % 100
-    
-    print("password is", counter)
+            # Counter = (sp + rot) // 100
+            end_raw = point + rot
+            if point == 0:
+                counter += rot // 100
+            else:
+                counter += end_raw // 100
 
+        point = end_raw % 100
+            
+    print("\ncounter", counter)
+    
 def main():
-    input_path = "input.txt"
+    input_path = "input"
     inputs = read_file(input_path)
     rotations(inputs)
     
