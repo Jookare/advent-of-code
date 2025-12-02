@@ -1,56 +1,54 @@
-def read_file(input_path):
-    with open(input_path) as f:
-        data = f.readlines()
-    return data
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-def silver(inputs, start_point=50):
-    point = start_point
-    counter = 0
-    for move in inputs:
-        side = move[0]
-        rot = int(move[1:])
-        
-        if side == "L":
-            end_raw = point - rot
-        else:
-            end_raw = point + rot
+from base import Day
 
-        point = end_raw % 100
-        if point == 0:
-            counter += 1
-            
-    print("\nSilver answer", counter)
+class Day01(Day):
+    def solve_silver(self):
+        point = 50
+        counter = 0
 
-def gold(inputs, start_point=50):
-    point = start_point
-    counter = 0
-    for move in inputs:
-        side = move[0]
-        rot = int(move[1:])
-        
-        if side == "L":
-            end_raw = point - rot
-            if point == 0:
-                counter += rot // 100
+        for move in self.data:
+            side = move[0]
+            rot = int(move[1:])
+
+            if side == "L":
+                end_raw = point - rot
             else:
-                counter += (100 - end_raw) // 100
-        else:
-            # Counter = (sp + rot) // 100
-            end_raw = point + rot
-            if point == 0:
-                counter += rot // 100
-            else:
-                counter += end_raw // 100
+                end_raw = point + rot
 
-        point = end_raw % 100
-            
-    print("\nGold answer", counter)
+            point = end_raw % 100
+            if point == 0:
+                counter += 1
+
+        return counter
+
+    def solve_gold(self):
+        point = 50
+        counter = 0
+
+        for move in self.data:
+            side = move[0]
+            rot = int(move[1:])
+
+            if side == "L":
+                end_raw = point - rot
+                if point == 0:
+                    counter += rot // 100
+                else:
+                    counter += (100 - end_raw) // 100
+            else:
+                # Counter = (sp + rot) // 100
+                end_raw = point + rot
+                if point == 0:
+                    counter += rot // 100
+                else:
+                    counter += end_raw // 100
+
+            point = end_raw % 100
+
+        return counter
     
-def main():
-    input_path = "input"
-    inputs = read_file(input_path)
-    silver(inputs)
-    gold(inputs)
-    
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    Day01(1).run()

@@ -1,63 +1,54 @@
-def read_file(input_path):
-    with open(input_path) as f:
-        data = f.readlines()
-    return data
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-def silver(inputs):
-    
-    sum_invalid = 0
-    for r in inputs:
-        start = r.split("-")[0]
-        end = r.split("-")[1]
-        
-        # Remove odd numbers
-        if len(start) % 2:
-            start = "1"+len(start)*"0"
-        if len(end) % 2:
-            end = "9"*(len(end)-1)
-        # print(start, end)
-        for value in range(int(start), int(end)+1):
-            value = str(value)
-            midpoint = len(str(value))//2
-            flag = True
-            for i in range(midpoint):
-                if value[i] != value[midpoint+i]:
-                    flag = False
-                    break
-            if flag:
-                sum_invalid += int(value)
+from base import Day
 
+class Day02(Day):
+    def solve_silver(self):
+        sum_invalid = 0
+        for r in self.data.split(","):
+            start = r.split("-")[0]
+            end = r.split("-")[1]
             
-    print("\nSilver answer", sum_invalid)
-
-def gold(inputs):
-    sum_invalid = 0
-    for r in inputs:
-        start = r.split("-")[0]
-        end = r.split("-")[1]
-        
-        for value in range(int(start), int(end)+1):
-            value = str(value)
-            l = len(value)
-            
-            c = l
-            while c > 1:
-                if l % c == 0:
-                    d = l//c
-                    if value == c * value[:d]:
-                        sum_invalid += int(value)
+            # Remove odd numbers
+            if len(start) % 2:
+                start = "1"+len(start)*"0"
+            if len(end) % 2:
+                end = "9"*(len(end)-1)
+            # print(start, end)
+            for value in range(int(start), int(end)+1):
+                value = str(value)
+                midpoint = len(str(value))//2
+                flag = True
+                for i in range(midpoint):
+                    if value[i] != value[midpoint+i]:
+                        flag = False
                         break
-                c -=1
-    print("\Gold answer", sum_invalid)
+                if flag:
+                    sum_invalid += int(value)
+
+        return sum_invalid
+
+    def solve_gold(self):
+        sum_invalid = 0
+        for r in self.data.split(","):
+            start = r.split("-")[0]
+            end = r.split("-")[1]
             
+            for value in range(int(start), int(end)+1):
+                value = str(value)
+                l = len(value)
+                
+                c = l
+                while c > 1:
+                    if l % c == 0:
+                        d = l//c
+                        if value == c * value[:d]:
+                            sum_invalid += int(value)
+                            break
+                    c -=1
+        return sum_invalid
     
-def main():
-    input_path = "input"
-    inputs = read_file(input_path)[0]
-    inputs = inputs.replace("\n", "")
-    inputs = inputs.split(",")
-    silver(inputs)
-    gold(inputs)
-    
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    Day02(2).run()
