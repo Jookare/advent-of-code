@@ -25,14 +25,30 @@ def silver(inputs):
                     flag = False
                     break
             if flag:
-                print(value)
                 sum_invalid += int(value)
 
             
     print("\nSilver answer", sum_invalid)
 
 def gold(inputs):
-    print("\Gold answer", None)
+    sum_invalid = 0
+    for r in inputs:
+        start = r.split("-")[0]
+        end = r.split("-")[1]
+        
+        for value in range(int(start), int(end)+1):
+            value = str(value)
+            l = len(value)
+            
+            c = l
+            while c > 1:
+                if l % c == 0:
+                    d = l//c
+                    if value == c * value[:d]:
+                        sum_invalid += int(value)
+                        break
+                c -=1
+    print("\Gold answer", sum_invalid)
             
     
 def main():
