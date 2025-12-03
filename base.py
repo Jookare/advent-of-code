@@ -38,3 +38,16 @@ class Day:
 
     def solve_gold(self):
         raise NotImplementedError
+    
+# Example
+from base import Day
+
+class Day0x(Day):
+    def solve_silver(self):
+        return None
+
+    def solve_gold(self):
+        return None
+    
+if __name__ == "__main__":
+    Day0x(0).run()
