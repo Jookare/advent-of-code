@@ -21,12 +21,12 @@ class Day:
     def run(self):
         print(f"--- Day {self.day:02} ---")
 
-        start = time.time()
+        start = time.perf_counter()
         silver = self.solve_silver()
-        mid = time.time()
+        mid = time.perf_counter()
 
         gold = self.solve_gold()
-        end = time.time()
+        end = time.perf_counter()
 
         print(f"Silver: {silver}   ({(mid - start)*1000:.2f} ms)")
         print(f"Gold:   {gold}     ({(end - mid)*1000:.2f} ms)")

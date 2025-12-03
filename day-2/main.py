@@ -49,6 +49,9 @@ class Day02(Day):
                             break
                     c -=1
         return sum_invalid
-    
+
+
+
+            
 if __name__ == "__main__":
     Day02(2).run()
