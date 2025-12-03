@@ -7,6 +7,7 @@ from base import Day
 class Day03(Day):
     def solve_silver(self):
         joltage = 0
+        # Quite naive solution
         for x in self.data:
             split = [int(dig) for dig in x]
             max_digit = max(split)
@@ -27,7 +28,27 @@ class Day03(Day):
         return joltage
 
     def solve_gold(self):
-        return None
+        # How many digits long
+        n = 12
+        joltage = 0
+        for x in self.data:
+            split = [int(dig) for dig in x]
+
+            start_idx = 0
+            index_list = []
+            for i in range(1,n+1):
+                
+                end_idx = len(split)-(n-i)
+                max_num = max(split[start_idx:end_idx])
+                max_idx = split.index(max_num, start_idx, end_idx)
+                index_list.append(max_idx)
+                
+                # +1 to skip the current highest digit
+                start_idx = max_idx+1
+            
+            values = [str(split[id]) for id in (index_list)]
+            joltage += int("".join(values))
+        return joltage
     
 if __name__ == "__main__":
     Day03(3).run()
