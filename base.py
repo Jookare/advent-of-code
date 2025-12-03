@@ -21,12 +21,12 @@ class Day:
     def run(self):
         print(f"--- Day {self.day:02} ---")
 
-        start = time.perf_counter()
+        start = time.time()
         silver = self.solve_silver()
-        mid = time.perf_counter()
+        mid = time.time()
 
         gold = self.solve_gold()
-        end = time.perf_counter()
+        end = time.time()
 
         print(f"Silver: {silver}   ({(mid - start)*1000:.2f} ms)")
         print(f"Gold:   {gold}     ({(end - mid)*1000:.2f} ms)")
@@ -38,3 +38,16 @@ class Day:
 
     def solve_gold(self):
         raise NotImplementedError
+    
+# Example
+from base import Day
+
+class Day0x(Day):
+    def solve_silver(self):
+        return None
+
+    def solve_gold(self):
+        return None
+    
+if __name__ == "__main__":
+    Day0x(0).run()
