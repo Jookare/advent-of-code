@@ -9,9 +9,9 @@ class Day:
         self.input_path = self.day_dir / "input"
         self.data = self.read_input()
 
-    def read_input(self):
+    def read_input(self,):
         with open(self.input_path) as f:
-            data = [line.strip() for line in f.readlines()]
+            data = f.read().splitlines() 
 
         if len(data) == 1:
             return data[0]
