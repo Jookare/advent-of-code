@@ -6,94 +6,92 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from base import Day
 from functools import reduce
-import math 
 
 
 class Day08(Day):
     def solve_silver(self):
-        
         inputs = [[int(val) for val in row.split(",")] for row in self.data]
+        N_inputs = len(inputs)
         
+        # Number of closest nodes
+        N = 1000
         
-        dists = {}
-        for i, val1 in enumerate(inputs):
-            distances = []
-            # print(val1)
-            for j, val2 in enumerate(inputs):
-                if  j < i:
-                    distances += [((val1[0] - val2[0])**2 + (val1[1] - val2[1])**2 + (val1[2] - val2[2])**2)]
-            dists[i] = distances
-
-        nodes = []
-        for i in range(1000):
-            minim = [(0,0), math.inf]
-            for key in dists.keys():
+        # Compute distances between all nodes
+        dists = self.compute_dist(inputs)
+        _, _, connects = self.find_nodes(dists[:N], N_inputs)
+        lengths = [len(arr) for arr in connects]
+        largest_circs = reduce(lambda a,b: a*b, sorted(lengths, reverse=True)[:3])
+        
+        return largest_circs
                 
-                row = dists[key]
-                # print(row)
-                for id, val in enumerate(row[:key]):
-                    if val > 0 and val < minim[1]:
-                        minim = [(key, id), val]
-                        
-            key, id = minim[0]
-            nodes += [(key, id)]
-            dists[key][id] = 0
-            
-        nodes
-                    
+    def solve_gold(self):
+        inputs = [[int(val) for val in row.split(",")] for row in self.data]
+        N_inputs = len(inputs)
+        
+        # Compute distances between all nodes
+        dists = self.compute_dist(inputs)
+
+        a, b, _ = self.find_nodes(dists, N_inputs)
+
+        return inputs[a][0]*inputs[b][0]
+    
+    def compute_dist(self, inputs):
+        """Computes distances between all pairs of points"""
+        dists = []
+        for i, val1 in enumerate(inputs):
+            for j, val2 in enumerate(inputs):
+                if j < i:
+                    dists += [(i,j, ((val1[0] - val2[0])**2 + (val1[1] - val2[1])**2 + (val1[2] - val2[2])**2))]
+        
+        dists = sorted(dists, key=lambda x: x[2])
+        return dists
+    
+    def find_nodes(self, dists, N_inputs):
         connects = []
-        for a, b in nodes:
-            # print(a,b)
+        for a, b, D in dists:
             new_item = True
             if len(connects) == 0:
                 connects += [[a,b]]
             else:
+                # Find if a or b already in some circuit
                 for circ in connects:
-                    # print(a,b ,circ)
                     if a in circ and b in circ:
                         new_item = False
                         continue
                     elif a in circ:
                         circ += [b]
                         new_item = False
-                        # break
+                        break
                     elif b in circ:
                         circ += [a]
                         new_item = False
-                        # break
+                        break
                 
-                # combine existing paths
                 arrays = []
-                for id, ccc in enumerate(connects):
-                    if a in ccc and b in ccc:
+                # Find in which array a and b exists
+                for id, circ in enumerate(connects):
+                    if a in circ and b in circ:
                         arrays.append(id)
-                    elif b in ccc:
+                    elif b in circ:
                         arrays.append(id)
-                    elif a in ccc:
+                    elif a in circ:
                         arrays.append(id)
                 
-                print(arrays)
+                # If a and b are in two different arrays, combine those
                 if len(arrays) == 2:
                     connects[arrays[0]] = list(set(connects[arrays[0]] + connects[arrays[1]]))
                     connects.pop(arrays[1])
+                    
+                # If all values in connects, stop iteration
+                if len(connects[0]) == N_inputs:
+                    # print(connects, a, b)
+                    break
                 
-                # print(arrays)
-                # print(connects)
+                # If a and b not in any array make new one
                 if new_item:
                     connects += [[a,b]]
                 
+        return (a,b, connects)
 
-        lengths = [len(arr) for arr in connects]
-        largest_circs = reduce(lambda a,b: a*b, sorted(lengths, reverse=True)[:3])
-        print(largest_circs)
-        return largest_circs
-
-    def mul(self, x, y):
-        return x * y
-    
-    
-    def solve_gold(self):
-       
-        return None
 if __name__ == "__main__":
     Day08(8).run()
